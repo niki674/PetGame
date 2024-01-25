@@ -1,0 +1,61 @@
+{
+  "happiness": 100,
+  "satiety": 100,
+  "health": 100,
+  "money": 10,
+  "coins_per_second": 1,
+  "costs_of_upgrade": {
+    "100": false,
+    "1000": false,
+    "5000": false,
+    "10000": false,
+    "20000": false,
+    "40000": false,
+    "80000": false,
+    "160000": false
+  },
+  "clothes": [
+    {
+      "name": "Синяя футболка",
+      "price": 10,
+      "file": "images/items/blue t-shirt.png",
+      "is_bought": true,
+      "is_using": true
+    },
+    {
+      "name": "Ботинки",
+      "price": 50,
+      "file": "images/items/boots.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Шляпа",
+      "price": 50,
+      "file": "images/items/hat.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Бантик",
+      "price": 40,
+      "file": "images/items/bow.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Фуражка",
+      "price": 100,
+      "file": "images/items/cap.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Красная футболка",
+      "price": 80,
+      "file": "images/items/red t-shirt.png",
+      "is_bought": false,
+      "is_using": false
+    }
+  ]
+}
