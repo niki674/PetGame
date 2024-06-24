@@ -8,7 +8,11 @@
     "100": false,
     "1000": false,
     "5000": false,
-    "10000": false
+    "10000": false,
+    "20000": false,
+    "40000": false,
+    "80000": false,
+    "160000": false
   },
     "clothes": [
     {
@@ -53,4 +57,54 @@
       "is_bought": false,
       "is_using": false
     },
+    {
+      "name": "Серебрянная цепь",
+      "price": 90,
+      "file": "images/items/silver chain.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Золотая цепь",
+      "price": 100,
+      "file": "images/items/gold chain.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Солнечные очки",
+      "price": 50,
+      "file": "images/items/sunglasses.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Желтая футболка",
+      "price": 150,
+      "file": "images/items/yellow t-shirt.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Наушники",
+      "price": 500,
+      "file": "images/items/headphones.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Грим",
+      "price": 1000,
+      "file": "images/items/grim.png",
+      "is_bought": false,
+      "is_using": false
+    },
+    {
+      "name": "Черная дыра",
+      "price": 50000,
+      "file": "images/items/black hole.png",
+      "is_bought": false,
+      "is_using": false
+    }
+  ]
 }

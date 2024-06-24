@@ -45,7 +45,7 @@ class Button:
         self.rect = self.image.get_rect()
         self.rect.topleft = x, y
 
-        self.is_pressed = True
+        self.is_pressed = False
 
         self.func = func
 
@@ -97,11 +97,11 @@ class Dog:
         self.rect = self.image.get_rect()
         self.rect.center = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 135
 
-    def update(self):
+    def update(self, rotation=0):
         keypressed = pg.key.get_pressed()
-        if keypressed[pg.K_a]:
+        if keypressed[pg.K_a] or rotation == -1:
             self.rect.x -= 7
-        if keypressed[pg.K_d]:
+        if keypressed[pg.K_d] or rotation == 1:
             self.rect.x += 7
 
 
@@ -133,10 +133,19 @@ class MiniGame:
         self.bg = load_image('images/game_background.png', SCREEN_WIDTH, SCREEN_HEIGHT)
 
         self.dog = Dog()
+
+        self.rotation = 0
+
+        self.left_button = Button(50, SCREEN_HEIGHT - 150, '<---',  height=100, width=100, func=self.without)
+        self.right_button = Button(SCREEN_WIDTH - 150, SCREEN_HEIGHT - 150, '--->',  height=100, width=100, func=self.without)
+
         self.toys = pg.sprite.Group()
         self.score = 0
         self.start_time = pg.time.get_ticks()
-        self.interval = 10000
+        self.interval = 15000
+
+    def without(self):
+        ...
 
     def new_game(self):
         self.dog = Dog()
@@ -147,7 +156,10 @@ class MiniGame:
 
     def update(self):
         if self.game.mode == 'mini game':
-            self.dog.update()
+            self.left_button.update()
+            self.right_button.update()
+            self.rotation = 0 if self.left_button.is_pressed == False and self.right_button.is_pressed == False else 1 if self.left_button.is_pressed == False else -1
+            self.dog.update(self.rotation)
             self.toys.update()
             if random.randint(0, 50) == 1:
                 self.toys.add(Toy())
@@ -162,6 +174,9 @@ class MiniGame:
 
     def draw(self):
         self.game.screen.blit(self.bg, (0, 0))
+
+        self.left_button.draw(self.game.screen)
+        self.right_button.draw(self.game.screen)
 
         self.game.screen.blit(self.dog.image, self.dog.rect)
 
@@ -214,7 +229,7 @@ class ClothesMenu:
             self.items[self.current_item].is_put_on = not self.items[self.current_item].is_put_on
 
     def buy(self):
-        if self.game.money >= self.items[self.current_item].price:
+        if self.game.money >= self.items[self.current_item].price and self.items[self.current_item].is_bought != True:
             self.game.money -= self.items[self.current_item].price
             self.items[self.current_item].is_bought = True
 
@@ -298,7 +313,7 @@ class FoodMenu:
             self.current_item = len(self.items) - 1
 
     def buy(self):
-        if self.game.money >= self.items[self.current_item].price:
+        if self.game.money >= self.items[self.current_item].price and self.items[self.current_item]:
             self.game.money -= self.items[self.current_item].price
             self.game.satiety += self.items[self.current_item].satiety
             if self.game.satiety > 100:
@@ -325,9 +340,17 @@ class FoodMenu:
             button.draw(screen)
 
 
+class Exit:
+    def __init__(self, game):
+        self.game = game
+        self.exit_button = Button(SCREEN_WIDTH - 70, 20, 'X', height=50, width=50, func = self.exit)
+
+    def exit(self):
+        self.game.mode = 'main'
+
+
 class Game:
     def __init__(self):
-
         # Создание окна
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pg.display.set_caption("Виртуальный питомец")
@@ -364,6 +387,8 @@ class Game:
         self.clothes_menu = ClothesMenu(self, self.data)
         self.food_menu = FoodMenu(self)
         self.mini_game = MiniGame(self)
+
+        self.exit = Exit(self)
 
         self.mode = 'main'
 
@@ -445,6 +470,9 @@ class Game:
                     self.coins_per_second = 1
                     for key in self.costs_of_upgrade.keys():
                         self.costs_of_upgrade[key] = False
+                    for item in self.clothes_menu.items:
+                        item.is_bought = False
+                        item.is_put_on = False
                     self.save()
                     pg.quit()
                     exit()
@@ -459,8 +487,13 @@ class Game:
                     button.is_clicked(event)
             elif self.mode == 'clothes menu':
                 self.clothes_menu.is_clicked(event)
+                self.exit.exit_button.is_clicked(event)
             elif self.mode == 'food menu':
                 self.food_menu.is_clicked(event)
+                self.exit.exit_button.is_clicked(event)
+            elif self.mode == 'mini game':
+                self.mini_game.left_button.is_clicked(event)
+                self.mini_game.right_button.is_clicked(event)
 
     def update(self):
         if self.mode == 'main':
@@ -470,8 +503,10 @@ class Game:
             self.mini_game.update()
         elif self.mode == 'clothes menu':
             self.clothes_menu.update()
+            self.exit.exit_button.update()
         elif self.mode == 'food menu':
             self.food_menu.update()
+            self.exit.exit_button.update()
 
     def draw(self):
         self.screen.blit(self.background, (0, 0))
@@ -496,8 +531,10 @@ class Game:
 
         if self.mode == 'clothes menu':
             self.clothes_menu.draw(self.screen)
+            self.exit.exit_button.draw(self.screen)
         elif self.mode == 'food menu':
             self.food_menu.draw(self.screen)
+            self.exit.exit_button.draw(self.screen)
         elif self.mode == 'mini game':
             self.mini_game.draw()
 
